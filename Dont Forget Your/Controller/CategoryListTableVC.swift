@@ -296,6 +296,7 @@ extension CategoryListTableVC{
     @objc func endReorderingRows(){
         tableView.isEditing = false
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(menuOfActions))
+        saveCategories()
     }
     
 }
