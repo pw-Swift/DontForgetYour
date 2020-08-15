@@ -1,5 +1,5 @@
 //
-//  Item.swift
+//  ItemFunc.swift
 //  Dont Forget Your
 //
 //  Created by Pierre Waroquier on 02/08/2020.
@@ -8,7 +8,7 @@
 
 
 import UIKit
-struct Item: Codable {
+struct ItemFunc: Codable {
     var itemName: String
     var itemDescription: String
     var checkStatus: Bool

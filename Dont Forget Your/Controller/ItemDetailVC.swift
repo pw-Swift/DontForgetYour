@@ -44,9 +44,12 @@ class ItemDetailVC: UIViewController {
         if let button = sender as? UIButton, button === buttonValidate{
             let segueName = textName.text
             let segueDescription = textDescription.text
-            let itemToSegue = Item(itemName: segueName!, itemDescription: segueDescription!, checkStatus: checkStatus ?? false)
+            item?.itemName = segueName
+            item?.itemDescription = segueDescription
+            item?.checkStatus = checkStatus ?? false
+            //let itemToSegue = Item(itemName: segueName!, itemDescription: segueDescription!, checkStatus: checkStatus ?? false)
             
-            item = itemToSegue
+            //item = itemToSegue
         }
     }
 

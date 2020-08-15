@@ -1,5 +1,5 @@
 //
-//  Category.swift
+//  CategoryFunc.swift
 //  Dont Forget Your
 //
 //  Created by Pierre Waroquier on 31/07/2020.
@@ -9,7 +9,7 @@
 import UIKit
 
 
-struct Category: Codable {
+struct CategoryFunc: Codable {
     var title: String
     var numberOfItem: String
     

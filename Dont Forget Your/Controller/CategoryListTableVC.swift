@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate {
 
@@ -18,19 +19,19 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
     var rowNumber: Int?
     
     var dataFilePath = K.dataFilePath
+    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+//        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        
         tableView.tableFooterView = UIView()
         navigationController?.delegate = self
         
-        if let savedCategory = loadCategories(){
-            categories = savedCategory
-            if categories.isEmpty{
-                loadSampleData()
-            }
-        } else {loadSampleData()}
+        loadCategory()
+    
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(menuOfActions))
   
@@ -40,7 +41,6 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return K.numberOfSectionsInCategory
     }
 
@@ -51,7 +51,6 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
         else {
             return 1
         }
-        
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -64,15 +63,15 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
             let cell = tableView.dequeueReusableCell(withIdentifier: K.categoryCell, for: indexPath) as! CategoryListTableViewCell
             
             //Configure the view containing the lables
-            Category.cellsShadowSettings(cell.viewCategoryCellShadow, cell)
+            CategoryFunc.cellsShadowSettings(cell.viewCategoryCellShadow, cell)
             
-            Category.cellsGradientColorSettings(cell.viewCategoryCell, cell)
+            CategoryFunc.cellsGradientColorSettings(cell.viewCategoryCell, cell)
             
-            Category.cellsCornerRadiusSettings(cell.viewCategoryCell)
+            CategoryFunc.cellsCornerRadiusSettings(cell.viewCategoryCell)
             
             //Set the text of the label Category
             cell.category.text = categories[indexPath.row].title
-            cell.numberOfItem.text = String(categories[indexPath.row].numberOfItem)
+            cell.numberOfItem.text = String(categories[indexPath.row].numberOfItem!)
             
             //No gray color when I touch a cell - Cancel gray color selection default
             Colors.clearGrayColorWhenTapped(for: cell)
@@ -112,14 +111,6 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
         } else { return proposedDestinationIndexPath}
     }
     
-    /*override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.section == 0{
-            return false
-        }
-        else {return true}
-    }*/
-
-    
 
     
     // MARK: - Navigation
@@ -129,13 +120,7 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
             switch segue.identifier {
             case K.cellNewCategory:
                 if let destination = segue.destination as? NewCategory{
-                    let categoryTitle = categories[selectedCellIndex!.row].title
-                    var category = Category(title: "", numberOfItem: "")
-                    if let categoryNumber = numberOfItems{
-                        category = Category(title: categoryTitle, numberOfItem: categoryNumber)
-                    } else{
-                        category = Category(title: categoryTitle, numberOfItem: "")
-                    }
+                    let category = categories[selectedCellIndex!.row]
                     
                     destination.categories = category
                 }
@@ -148,7 +133,8 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
                     if let selectedCell = sender as? CategoryListTableViewCell{
                         if let index = tableView.indexPath(for: selectedCell){
                             destination.navigationItem.title = categories[index.row].title
-                            destination.dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(categories[index.row].title).plist")
+                            destination.selectedCategory = categories[index.row]
+//                            destination.dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(categories[index.row].title).plist")
                             destination.rowNumber = index.row
                         }
                     }
@@ -171,39 +157,30 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
         if sourceButtonNewCategory == "OK"{
             if categoryToModify == true {
                 if let cellIndex = selectedCellIndex{
-                    var indexRowCategory = categories[cellIndex.row]
-                    let originalPathItems = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(indexRowCategory.title).plist")
-                    let newPathItems = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(sourceTextNewCategory!).plist")
+                    let indexRowCategory = categories[cellIndex.row]
                     categories[cellIndex.row].title = sourceTextNewCategory!
                     indexRowCategory.numberOfItem = sourceNumberOfItems!
-                    if FileManager.default.fileExists(atPath: originalPathItems!.path){
-                        do{
-                            try FileManager.default.moveItem(at: originalPathItems!, to: newPathItems!)
-                        }catch{
-                            print("Error changing path Name: \(error)")
-                        }
-                    }
-
-                    saveCategories()
+                    saveCategory()
                 }
 
             } else {
-                let newCategory = Category(title: sourceTextNewCategory!, numberOfItem: sourceNumberOfItems!)
-                categories.append(newCategory)
-                saveCategories()
+                let modifiedCategory = Category(context: context)
+                modifiedCategory.title = sourceTextNewCategory
+                modifiedCategory.numberOfItem = sourceNumberOfItems
+                categories.append(modifiedCategory)
             }
-            tableView.reloadData()
+            //saveCategory()
         }
         else {
             return
         }
-
+        
+        tableView.reloadData()
     }
     
  
     @IBAction func buttonAdd(_ sender: Any) {
         categoryToModify = false
-        //performSegue(withIdentifier: Constants.newCategory, sender: self)
     }
 }
 
@@ -260,24 +237,16 @@ extension CategoryListTableVC{
         let deleteAlerte = UIAlertController(title: "Warning", message: "All the items contained in the List will be deleted", preferredStyle: .alert)
         deleteAlerte.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
         deleteAlerte.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (action) in
-            let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(self.categories[indexPath.row].title).plist")
-        
-            if FileManager.default.fileExists(atPath: dataFilePath!.path){
-                do{
-                  
-                    try FileManager.default.removeItem(at: dataFilePath!)
-                    
-                }catch{
-                    print("Error: not able to delete items - \(error)")
-                }
-            }
-            self.categories.remove(at: indexPath.row)
-            self.tableView.deleteRows(at: [indexPath], with: .fade)
             
-            self.saveCategories()
+            self.context.delete(self.categories[indexPath.row])
+
+            self.categories.remove(at: indexPath.row)
+            
+            self.saveCategory()
         }))
         self.present(deleteAlerte, animated: true, completion: nil)
     }
+    
     @objc func menuOfActions(){
         let action = UIAlertController()
         action.addAction(UIAlertAction(title: "New Title", style: .default, handler: { (action) in
@@ -296,7 +265,7 @@ extension CategoryListTableVC{
     @objc func endReorderingRows(){
         tableView.isEditing = false
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(menuOfActions))
-        saveCategories()
+        saveCategory()
     }
     
 }
@@ -312,8 +281,31 @@ extension UIAlertController {
     }
 }
 
-// MARK: - Persistent Datas
+// MARK: - Persistent Datas - Core Data
 extension CategoryListTableVC{
+    func saveCategory(){
+        do{
+            try context.save()
+        } catch {
+            print("Category not saved: \(error)")
+        }
+        tableView.reloadData()
+    }
+    
+    func loadCategory(){
+        let request: NSFetchRequest<Category> = Category.fetchRequest()
+        
+        do{
+            categories = try context.fetch(request)
+        } catch {
+            print("Unable to load categories: \(error)")
+        }
+    }
+}
+
+
+// MARK: - Persistent Datas - Codable
+/*extension CategoryListTableVC{
     func saveCategories(){
         let encoder = PropertyListEncoder()
         do {
@@ -346,4 +338,4 @@ extension CategoryListTableVC{
         }
     }
     
-}
+}*/

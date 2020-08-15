@@ -23,6 +23,8 @@ class NewCategory: UIViewController {
     var listToCheck = [Category]()
     var numberOfItems: String?
     
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -64,6 +66,8 @@ class NewCategory: UIViewController {
     @IBAction func buttonPressed(_ sender: Any) {
         if buttonNewCategory.titleLabel?.text == K.buttonUnvalid{
             self.dismiss(animated: true, completion: nil)
+        } else {
+            return //saveNewCategory()
         }
     }
 }
@@ -71,7 +75,7 @@ class NewCategory: UIViewController {
 extension NewCategory {
     func configuration() {
 
-        Category.shadowSettings(for: shadowView, in: radiusView)
+        CategoryFunc.shadowSettings(for: shadowView, in: radiusView)
         //Category.gradientColorSettings(for: shadowView, in: radiusView)
         //Category.cellsCornerRadiusSettings(radiusView)
  
@@ -125,5 +129,20 @@ extension NewCategory{
         let alert = UIAlertController(title: "Warning", message: "This entry already exists", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
+    }
+}
+
+// MARK: - Persistent Data - Core Data
+extension NewCategory{
+    func saveNewCategory(){
+        
+        let newCategory = Category(context: context)
+        newCategory.title = textNewCategory.text
+        newCategory.numberOfItem = ""
+        do{
+            try context.save()
+        } catch {
+            print("New category not saved: \(error)")
+        }
     }
 }

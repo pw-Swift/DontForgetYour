@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
 
@@ -16,44 +17,41 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
     var dataFilePath = URL(string: "")
     var numberOfItems = 0
     var rowNumber = 0
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
+    var selectedCategory: Category?{
+        didSet{
+            loadItems()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
         
         navigationController?.delegate = self
-    
-        if let savedItems = loadItems(){
-            items = savedItems
-            if items.isEmpty{
-                loadSampleData()
-            }
-        } else {loadSampleData()}
-        
-        
-        
-        loadSampleData()
-        Item.itemsAppearance(navigationItem: navigationItem, navigationController: navigationController!)
+
+//        loadSampleData()
+        ItemFunc.itemsAppearance(navigationItem: navigationItem, navigationController: navigationController!)
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(menuOfActions))
         UINavigationBar.appearance().tintColor = UIColor.lightText
-        
-        
     }
   
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        if let test = viewController as? CategoryListTableVC{
+        if let navigation = viewController as? CategoryListTableVC{
             navigationController.navigationBar.tintColor = UIColor.systemBlue
-            test.numberOfItems = String(numberOfItems)
-            test.rowNumber = rowNumber
+            navigation.numberOfItems = String(numberOfItems)
+            navigation.rowNumber = rowNumber
             if numberOfItems > 1{
-                test.categories[rowNumber].numberOfItem = String("\(numberOfItems) items")
+                navigation.categories[rowNumber].numberOfItem = String("\(numberOfItems) items")
             }else{
-                test.categories[rowNumber].numberOfItem = String("\(numberOfItems) item")
+                navigation.categories[rowNumber].numberOfItem = String("\(numberOfItems) item")
             }
             
-            test.saveCategories()
-            test.tableView.reloadData()
+            //test.saveCategories()
+            navigation.saveCategory()
+            //navigation.tableView.reloadData()
         }
     }
     
@@ -89,9 +87,9 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
             
             //Category.cellsGradientColorSettings(cell.itemCellView, cell)
             
-            Category.cellsShadowSettings(cell.itemViewCellShadow, cell)
+            CategoryFunc.cellsShadowSettings(cell.itemViewCellShadow, cell)
             
-            Category.cellsCornerRadiusSettings(cell.itemCellView)
+            CategoryFunc.cellsCornerRadiusSettings(cell.itemCellView)
         
             cell.itemName.text = items[indexPath.row].itemName
             cell.itemDescription.text = items[indexPath.row].itemDescription
@@ -164,15 +162,17 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
                 
                 destination.item = selectedItem
                 
-                destination.labelDetailText = items[indexPath.row].itemName
+                destination.labelDetailText = items[indexPath.row].itemName!
                 
                 destination.checkStatus = items[indexPath.row].checkStatus
+                
             }
             
         case K.itemToNewDetail:
             itemToModify = false
             if let destination = segue.destination as? ItemDetailVC{
-                destination.item = Item(itemName: "", itemDescription: "", checkStatus: false)
+                destination.checkStatus = false
+                //destination.item = Item(itemName: "", itemDescription: "", checkStatus: false)
                 destination.labelDetailText = "New Item"
             }
         default:
@@ -193,19 +193,23 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
                     let row = indexToModify!.row
                     items[row] = sourceItem!
                     saveItems()
-                    tableView.reloadRows(at: [indexToModify!], with: .none)
+                    //tableView.reloadRows(at: [indexToModify!], with: .none)
                 }
                 else {
-                    let newItem = Item(itemName: newItemName!, itemDescription: newItemDescription!, checkStatus: newItemCheckStatus!)
+                    let newItem = Item(context: context)
+                    newItem.itemName = newItemName
+                    newItem.itemDescription = newItemDescription
+                    newItem.checkStatus = newItemCheckStatus! //Item(itemName: newItemName!, itemDescription: newItemDescription!, checkStatus: newItemCheckStatus!)
+                    newItem.parentCategory = selectedCategory
                     items.append(newItem)
                     saveItems()
-                    tableView.reloadData()
                 }
             }
         }
     }
 
     @IBAction func buttonPressed(_ sender: Any) {
+        
     }
 }
 
@@ -215,6 +219,7 @@ extension ItemsTableVC {
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let action = UIContextualAction(style: .destructive, title: "Delete") { (action, view, handler) in
+            self.context.delete(self.items[indexPath.row])
             self.items.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             self.numberOfItems = self.items.count
@@ -289,7 +294,6 @@ extension ItemsTableVC{
                 }
             }
             self.saveItems()
-            self.tableView.reloadData()
         }))
         
         action.addAction(UIAlertAction(title: "Reorder rows", style: .default, handler: { (action) in
@@ -309,39 +313,63 @@ extension ItemsTableVC{
     }
 }
 
-// MARK: - Persistent Data
+// MARK: - Persistent Data - Core Data
 extension ItemsTableVC{
     func saveItems(){
-        let encoder = PropertyListEncoder()
         do{
-            let data = try encoder.encode(items)
-            try data.write(to: dataFilePath!)
-        } catch{
-            print("Error encoding items array \(error)")
+            try context.save()
+        } catch {
+            print("Item not saved: \(error)")
+        }
+        tableView.reloadData()
+    }
+    
+    func loadItems(){
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        let predicate = NSPredicate(format: "parentCategory.title MATCHES %@", selectedCategory!.title!)
+        request.predicate = predicate
+        do{
+            items = try context.fetch(request)
+        } catch {
+            print("Items not loaded: \(error)")
         }
         
     }
-    
-    func loadItems() -> [Item]?{
-        if let data = try? Data(contentsOf: dataFilePath!){
-            let decoder = PropertyListDecoder()
-            do{
-               items = try decoder.decode([Item].self, from: data)
-            } catch{
-                print("Error decoding items array \(error)")
-            }
-        }
-        return items
-    }
-
-    func loadSampleData(){
-        if items.isEmpty{
-            let sampleOne = Item(itemName: "Delete me", itemDescription: "Swipe Left", checkStatus: false)
-            let sampleTwo = Item(itemName: "Edit me", itemDescription: "Swipe Right", checkStatus: true)
-            items.append(sampleOne)
-            items.append(sampleTwo)
-        }
-    }
 }
+
+// MARK: - Persistent Data - Codable
+//extension ItemsTableVC{
+//    func saveItems(){
+//        let encoder = PropertyListEncoder()
+//        do{
+//            let data = try encoder.encode(items)
+//            try data.write(to: dataFilePath!)
+//        } catch{
+//            print("Error encoding items array \(error)")
+//        }
+//
+//    }
+//
+//    func loadItems() -> [Item]?{
+//        if let data = try? Data(contentsOf: dataFilePath!){
+//            let decoder = PropertyListDecoder()
+//            do{
+//               items = try decoder.decode([Item].self, from: data)
+//            } catch{
+//                print("Error decoding items array \(error)")
+//            }
+//        }
+//        return items
+//    }
+//
+//    func loadSampleData(){
+//        if items.isEmpty{
+//            let sampleOne = Item(itemName: "Delete me", itemDescription: "Swipe Left", checkStatus: false)
+//            let sampleTwo = Item(itemName: "Edit me", itemDescription: "Swipe Right", checkStatus: true)
+//            items.append(sampleOne)
+//            items.append(sampleTwo)
+//        }
+//    }
+//}
 
 

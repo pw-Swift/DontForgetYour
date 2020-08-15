@@ -11,10 +11,11 @@
 		9E4A379624D73EE500C32AC6 /* ItemsTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4A379524D73EE500C32AC6 /* ItemsTableVC.swift */; };
 		9E4A379824D73F0C00C32AC6 /* ItemsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4A379724D73F0C00C32AC6 /* ItemsTableViewCell.swift */; };
 		9E4A379A24D7439700C32AC6 /* ItemDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4A379924D7439700C32AC6 /* ItemDetailVC.swift */; };
+		9E589B0624E6CB02007F4000 /* Data Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9E589B0424E6CB02007F4000 /* Data Model.xcdatamodeld */; };
 		9E72157C24D5403F00C93F48 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E72157B24D5403F00C93F48 /* Constants.swift */; };
 		9E9B027324D59E2D008E89E3 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9B027224D59E2D008E89E3 /* Colors.swift */; };
 		9E9B027524D5FC5F008E89E3 /* NewCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9B027424D5FC5F008E89E3 /* NewCategory.swift */; };
-		9E9CC89224D75ADB007B7FEC /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9CC89124D75ADB007B7FEC /* Item.swift */; };
+		9E9CC89224D75ADB007B7FEC /* ItemFunc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9CC89124D75ADB007B7FEC /* ItemFunc.swift */; };
 		9EC8977E24D4836B00C2C834 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC8977D24D4836B00C2C834 /* AppDelegate.swift */; };
 		9EC8978024D4836B00C2C834 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC8977F24D4836B00C2C834 /* SceneDelegate.swift */; };
 		9EC8978524D4836B00C2C834 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9EC8978324D4836B00C2C834 /* Main.storyboard */; };
@@ -22,7 +23,7 @@
 		9EC8978A24D4836C00C2C834 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9EC8978824D4836C00C2C834 /* LaunchScreen.storyboard */; };
 		9EC8979624D484F500C2C834 /* CategoryListTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC8979524D484F500C2C834 /* CategoryListTableVC.swift */; };
 		9EC8979824D4853100C2C834 /* CategoryListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC8979724D4853100C2C834 /* CategoryListTableViewCell.swift */; };
-		9EC8979A24D4854F00C2C834 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC8979924D4854F00C2C834 /* Category.swift */; };
+		9EC8979A24D4854F00C2C834 /* CategoryFunc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC8979924D4854F00C2C834 /* CategoryFunc.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,11 +31,12 @@
 		9E4A379524D73EE500C32AC6 /* ItemsTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsTableVC.swift; sourceTree = "<group>"; };
 		9E4A379724D73F0C00C32AC6 /* ItemsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsTableViewCell.swift; sourceTree = "<group>"; };
 		9E4A379924D7439700C32AC6 /* ItemDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailVC.swift; sourceTree = "<group>"; };
+		9E589B0524E6CB02007F4000 /* Data Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Data Model.xcdatamodel"; sourceTree = "<group>"; };
 		9E72157B24D5403F00C93F48 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = Controller/Constants.swift; sourceTree = "<group>"; };
 		9E72AB8124E2F01E00A491E0 /* Dont Forget Your.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Dont Forget Your.entitlements"; sourceTree = "<group>"; };
 		9E9B027224D59E2D008E89E3 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		9E9B027424D5FC5F008E89E3 /* NewCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCategory.swift; sourceTree = "<group>"; };
-		9E9CC89124D75ADB007B7FEC /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		9E9CC89124D75ADB007B7FEC /* ItemFunc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemFunc.swift; sourceTree = "<group>"; };
 		9EC8977A24D4836B00C2C834 /* Dont Forget Your.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dont Forget Your.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EC8977D24D4836B00C2C834 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9EC8977F24D4836B00C2C834 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -44,7 +46,7 @@
 		9EC8978B24D4836C00C2C834 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9EC8979524D484F500C2C834 /* CategoryListTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListTableVC.swift; sourceTree = "<group>"; };
 		9EC8979724D4853100C2C834 /* CategoryListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListTableViewCell.swift; sourceTree = "<group>"; };
-		9EC8979924D4854F00C2C834 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		9EC8979924D4854F00C2C834 /* CategoryFunc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryFunc.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,8 +118,9 @@
 		9EC8979324D4841D00C2C834 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				9EC8979924D4854F00C2C834 /* Category.swift */,
-				9E9CC89124D75ADB007B7FEC /* Item.swift */,
+				9EC8979924D4854F00C2C834 /* CategoryFunc.swift */,
+				9E9CC89124D75ADB007B7FEC /* ItemFunc.swift */,
+				9E589B0424E6CB02007F4000 /* Data Model.xcdatamodeld */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -205,9 +208,10 @@
 			files = (
 				9E4A379824D73F0C00C32AC6 /* ItemsTableViewCell.swift in Sources */,
 				9EC8979624D484F500C2C834 /* CategoryListTableVC.swift in Sources */,
-				9EC8979A24D4854F00C2C834 /* Category.swift in Sources */,
+				9EC8979A24D4854F00C2C834 /* CategoryFunc.swift in Sources */,
 				9E9B027324D59E2D008E89E3 /* Colors.swift in Sources */,
-				9E9CC89224D75ADB007B7FEC /* Item.swift in Sources */,
+				9E589B0624E6CB02007F4000 /* Data Model.xcdatamodeld in Sources */,
+				9E9CC89224D75ADB007B7FEC /* ItemFunc.swift in Sources */,
 				9EC8977E24D4836B00C2C834 /* AppDelegate.swift in Sources */,
 				9E9B027524D5FC5F008E89E3 /* NewCategory.swift in Sources */,
 				9EC8978024D4836B00C2C834 /* SceneDelegate.swift in Sources */,
@@ -422,6 +426,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		9E589B0424E6CB02007F4000 /* Data Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				9E589B0524E6CB02007F4000 /* Data Model.xcdatamodel */,
+			);
+			currentVersion = 9E589B0524E6CB02007F4000 /* Data Model.xcdatamodel */;
+			path = "Data Model.xcdatamodeld";
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 9EC8977224D4836B00C2C834 /* Project object */;
 }
