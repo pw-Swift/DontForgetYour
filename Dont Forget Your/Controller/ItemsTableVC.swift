@@ -145,6 +145,10 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
         let rowToMove = items[sourceIndexPath.row]
         items.remove(at: sourceIndexPath.row)
         items.insert(rowToMove, at: destinationIndexPath.row)
+        
+        for i in 0..<items.count{
+            items[Int(i)].rowNumber = Int16(i)
+        }
     }
     
     override func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
@@ -212,6 +216,7 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
                     newItem.itemName = newItemName
                     newItem.itemDescription = newItemDescription
                     newItem.checkStatus = newItemCheckStatus! //Item(itemName: newItemName!, itemDescription: newItemDescription!, checkStatus: newItemCheckStatus!)
+                    newItem.rowNumber = Int16(items.count)
                     newItem.parentCategory = selectedCategory
                     items.append(newItem)
                     saveItems(reloadData: true)
@@ -349,7 +354,10 @@ extension ItemsTableVC{
     func loadItems(){
         let request: NSFetchRequest<Item> = Item.fetchRequest()
         let predicate = NSPredicate(format: "parentCategory.title MATCHES %@", selectedCategory!.title!)
+        let sortNumber = NSSortDescriptor(key: "rowNumber", ascending: true)
         request.predicate = predicate
+        request.sortDescriptors = [sortNumber]
+        
         do{
             items = try context.fetch(request)
         } catch {
@@ -367,12 +375,14 @@ extension ItemsTableVC{
         itemSample.itemName = "Delete Me"
         itemSample.itemDescription = "Swipe Left"
         itemSample.checkStatus = false
+        itemSample.rowNumber = 0
         items.append(itemSample)
         
         let itemSample2 = Item(context: context)
         itemSample2.itemName = "Edit Me"
         itemSample2.itemDescription = "Swipe Right"
         itemSample2.checkStatus = true
+        itemSample2.rowNumber = 1
         items.append(itemSample2)
     }
 }

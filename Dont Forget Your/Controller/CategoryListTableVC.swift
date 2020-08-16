@@ -118,6 +118,10 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
         let rowToMove = categories[sourceIndexPath.row]
         categories.remove(at: sourceIndexPath.row)
         categories.insert(rowToMove, at: destinationIndexPath.row)
+        
+        for i in 0..<categories.count{
+            categories[Int(i)].rowNumber = Int16(i)
+        }
     }
     
     override func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
@@ -310,7 +314,8 @@ extension CategoryListTableVC{
     
     func loadCategory(){
         let request: NSFetchRequest<Category> = Category.fetchRequest()
-        
+        let sortNumber = NSSortDescriptor(key: "rowNumber", ascending: true)
+        request.sortDescriptors = [sortNumber]
         do{
             categories = try context.fetch(request)
         } catch {
@@ -322,21 +327,24 @@ extension CategoryListTableVC{
 // MARK: - Load Samples
 extension CategoryListTableVC{
      func loadSampleData () {
-         
-         let categorySample = Category(context: context)
-         categorySample.title = "Delete Me"
-         categorySample.numberOfItem = "Swipe Left"
-         categories.append(categorySample)
-         
-         let categorySample2 = Category(context: context)
-         categorySample2.title = "Edit Me"
-         categorySample2.numberOfItem = "Swipe Right"
-         categories.append(categorySample2)
-         
-         let categorySample3 = Category(context: context)
-         categorySample3.title = "New Category"
-         categorySample3.numberOfItem = "Click on the add button"
-         categories.append(categorySample3)
+        
+        let categorySample = Category(context: context)
+        categorySample.title = "Delete Me"
+        categorySample.numberOfItem = "Swipe Left"
+        categorySample.rowNumber = 0
+        categories.append(categorySample)
+        
+        let categorySample2 = Category(context: context)
+        categorySample2.title = "Edit Me"
+        categorySample2.numberOfItem = "Swipe Right"
+        categorySample2.rowNumber = 1
+        categories.append(categorySample2)
+        
+        let categorySample3 = Category(context: context)
+        categorySample3.title = "New Category"
+        categorySample3.numberOfItem = "Click on the add button"
+        categorySample2.rowNumber = 2
+        categories.append(categorySample3)
     }
 }
 // MARK: - Persistent Datas - Codable
