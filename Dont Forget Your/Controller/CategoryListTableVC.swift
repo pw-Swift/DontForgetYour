@@ -22,16 +22,31 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
+    var entityCount: Int{
+        let request = NSFetchRequest<Category>(entityName: "Category")
+        do {
+            let count = try context.count(for: request)
+            return count
+        } catch {
+            print("not able to count \(error)")
+            return 0
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        //print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
         tableView.tableFooterView = UIView()
         navigationController?.delegate = self
         
-        loadCategory()
-    
+        
+        if entityCount != 0{
+            loadCategory()
+        } else {
+            loadSampleData()
+        }
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(menuOfActions))
   
@@ -168,6 +183,7 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
                 modifiedCategory.title = sourceTextNewCategory
                 modifiedCategory.numberOfItem = sourceNumberOfItems
                 categories.append(modifiedCategory)
+                saveCategory()
             }
             //saveCategory()
         }
@@ -303,39 +319,49 @@ extension CategoryListTableVC{
     }
 }
 
-
+// MARK: - Load Samples
+extension CategoryListTableVC{
+     func loadSampleData () {
+         
+         let categorySample = Category(context: context)
+         categorySample.title = "Delete Me"
+         categorySample.numberOfItem = "Swipe Left"
+         categories.append(categorySample)
+         
+         let categorySample2 = Category(context: context)
+         categorySample2.title = "Edit Me"
+         categorySample2.numberOfItem = "Swipe Right"
+         categories.append(categorySample2)
+         
+         let categorySample3 = Category(context: context)
+         categorySample3.title = "New Category"
+         categorySample3.numberOfItem = "Click on the add button"
+         categories.append(categorySample3)
+    }
+}
 // MARK: - Persistent Datas - Codable
-/*extension CategoryListTableVC{
-    func saveCategories(){
-        let encoder = PropertyListEncoder()
-        do {
-            let data = try encoder.encode(self.categories)
-            try data.write(to: self.dataFilePath!)
-        } catch{
-            print("Error encoding categories array \(error)")
-        }
-    }
-    
-    func loadCategories() -> [Category]?{
-        if let data = try? Data(contentsOf: dataFilePath!){
-            let decoder = PropertyListDecoder()
-            do{
-                categories = try decoder.decode([Category].self, from: data)
-            }catch{
-                print("Error decoding categories array \(error)")
-            }
-        }
-        return categories
-    }
-    func loadSampleData () {
-        if categories.isEmpty{
-            let categorySampleOne = Category(title: "Delete me", numberOfItem: "Swipe Left")
-            let categorySampleTwo = Category(title: "Edit me", numberOfItem: "Swipe Right")
-            let categorySampleThree = Category(title: "New Title", numberOfItem: "Click on the add button")
-            categories.append(categorySampleOne)
-            categories.append(categorySampleTwo)
-            categories.append(categorySampleThree)
-        }
-    }
-    
-}*/
+//extension CategoryListTableVC{
+//    func saveCategories(){
+//        let encoder = PropertyListEncoder()
+//        do {
+//            let data = try encoder.encode(self.categories)
+//            try data.write(to: self.dataFilePath!)
+//        } catch{
+//            print("Error encoding categories array \(error)")
+//        }
+//    }
+//
+//    func loadCategories() -> [Category]?{
+//        if let data = try? Data(contentsOf: dataFilePath!){
+//            let decoder = PropertyListDecoder()
+//            do{
+//                categories = try decoder.decode([Category].self, from: data)
+//            }catch{
+//                print("Error decoding categories array \(error)")
+//            }
+//        }
+//        return categories
+//    }
+
+//
+//}

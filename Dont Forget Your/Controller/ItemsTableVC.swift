@@ -19,19 +19,31 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
     var rowNumber = 0
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
-    var selectedCategory: Category?{
-        didSet{
-            loadItems()
+    var entityCount: Int{
+        let request = NSFetchRequest<Item>(entityName: "Item")
+        do {
+            let count = try context.count(for: request)
+            return count
+        } catch {
+            print("not able to count \(error)")
+            return 0
         }
     }
+    
+    var selectedCategory: Category?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
         
         navigationController?.delegate = self
-
-//        loadSampleData()
+        
+        if entityCount != 0{
+            loadItems()
+        } else {
+            loadSampleData()
+        }
+        
         ItemFunc.itemsAppearance(navigationItem: navigationItem, navigationController: navigationController!)
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(menuOfActions))
@@ -192,7 +204,7 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
                 if itemToModify == true{
                     let row = indexToModify!.row
                     items[row] = sourceItem!
-                    saveItems()
+                    saveItems(reloadData: true)
                     //tableView.reloadRows(at: [indexToModify!], with: .none)
                 }
                 else {
@@ -202,7 +214,7 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
                     newItem.checkStatus = newItemCheckStatus! //Item(itemName: newItemName!, itemDescription: newItemDescription!, checkStatus: newItemCheckStatus!)
                     newItem.parentCategory = selectedCategory
                     items.append(newItem)
-                    saveItems()
+                    saveItems(reloadData: true)
                 }
             }
         }
@@ -223,7 +235,7 @@ extension ItemsTableVC {
             self.items.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             self.numberOfItems = self.items.count
-            self.saveItems()
+            self.saveItems(reloadData: true)
             handler(true)
         }
 
@@ -240,26 +252,26 @@ extension ItemsTableVC {
             var action = UIContextualAction()
             if checkmark == .checkmark{
                 action = UIContextualAction(style: .normal, title: "Uncheck") { (action, view, handler) in
-                    //tableView.cellForRow(at: indexPath)?.accessoryType = .none
+                    
                     self.items[indexPath.row].checkStatus = false
                     cell?.accessoryType = .none
                     cell?.itemName.textColor = UIColor.label
                     cell?.itemDescription.textColor = UIColor.label
                     cell?.itemImage.image = UIImage(named: "Hanger")
                     action.backgroundColor = UIColor.systemBlue
-                    self.saveItems()
+                    self.saveItems(reloadData: false)
                     handler(true)
                 }
             } else {
                 action = UIContextualAction(style: .normal, title: "Check") { (action, view, handler) in
-                    //tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+                    
                     self.items[indexPath.row].checkStatus = true
                     cell?.accessoryType = .checkmark
                     cell?.itemName.textColor = UIColor.systemGray4
                     cell?.itemDescription.textColor = UIColor.systemGray4
                     cell?.itemImage.image = UIImage(named: "HangerGray")
                     action.backgroundColor = UIColor.systemRed
-                    self.saveItems()
+                    self.saveItems(reloadData: false)
                     handler(true)
                 }
             }
@@ -293,7 +305,7 @@ extension ItemsTableVC{
                     self.items[i].checkStatus = false
                 }
             }
-            self.saveItems()
+            self.saveItems(reloadData: true)
         }))
         
         action.addAction(UIAlertAction(title: "Reorder rows", style: .default, handler: { (action) in
@@ -307,7 +319,7 @@ extension ItemsTableVC{
     }
     
     @objc func endReorderingRows(){
-        saveItems()
+        saveItems(reloadData: true)
         tableView.isEditing = false
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(menuOfActions))
     }
@@ -315,13 +327,23 @@ extension ItemsTableVC{
 
 // MARK: - Persistent Data - Core Data
 extension ItemsTableVC{
-    func saveItems(){
-        do{
-            try context.save()
-        } catch {
-            print("Item not saved: \(error)")
+    func saveItems(reloadData tableViewReloadData: Bool){
+        if tableViewReloadData == true{
+            do{
+                try context.save()
+            } catch {
+                print("Item not saved: \(error)")
+            }
+            tableView.reloadData()
+        } else {
+            do{
+                try context.save()
+            } catch {
+                print("Item not saved: \(error)")
+            }
+            //tableView.reloadData()
         }
-        tableView.reloadData()
+
     }
     
     func loadItems(){
@@ -337,6 +359,23 @@ extension ItemsTableVC{
     }
 }
 
+// MARK: - Load Samples
+extension ItemsTableVC{
+    func loadSampleData(){
+        
+        let itemSample = Item(context: context)
+        itemSample.itemName = "Delete Me"
+        itemSample.itemDescription = "Swipe Left"
+        itemSample.checkStatus = false
+        items.append(itemSample)
+        
+        let itemSample2 = Item(context: context)
+        itemSample2.itemName = "Edit Me"
+        itemSample2.itemDescription = "Swipe Right"
+        itemSample2.checkStatus = true
+        items.append(itemSample2)
+    }
+}
 // MARK: - Persistent Data - Codable
 //extension ItemsTableVC{
 //    func saveItems(){
@@ -362,14 +401,7 @@ extension ItemsTableVC{
 //        return items
 //    }
 //
-//    func loadSampleData(){
-//        if items.isEmpty{
-//            let sampleOne = Item(itemName: "Delete me", itemDescription: "Swipe Left", checkStatus: false)
-//            let sampleTwo = Item(itemName: "Edit me", itemDescription: "Swipe Right", checkStatus: true)
-//            items.append(sampleOne)
-//            items.append(sampleTwo)
-//        }
-//    }
+
 //}
 
 
