@@ -49,7 +49,6 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
         }
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(menuOfActions))
-  
     }
     
 
@@ -97,7 +96,6 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
             tableView.rowHeight = 120
             return cell
         }
-  
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -153,11 +151,9 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
                         if let index = tableView.indexPath(for: selectedCell){
                             destination.navigationItem.title = categories[index.row].title
                             destination.selectedCategory = categories[index.row]
-//                            destination.dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(categories[index.row].title).plist")
                             destination.rowNumber = index.row
                         }
                     }
-                    
                 }
             default:
                 return
@@ -189,7 +185,6 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
                 categories.append(modifiedCategory)
                 saveCategory()
             }
-            //saveCategory()
         }
         else {
             return
