@@ -9,10 +9,7 @@
 
 import UIKit
 struct ItemFunc: Codable {
-    var itemName: String
-    var itemDescription: String
-    var checkStatus: Bool
-    
+
     static func itemsAppearance(navigationItem: UINavigationItem, navigationController: UINavigationController){
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()

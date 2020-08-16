@@ -14,7 +14,6 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
     var items: [Item] = []
     var itemToModify: Bool = true
     var indexToModify: IndexPath?
-    var dataFilePath = URL(string: "")
     var numberOfItems = 0
     var rowNumber = 0
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -52,7 +51,7 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
   
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         if let navigation = viewController as? CategoryListTableVC{
-            navigationController.navigationBar.tintColor = UIColor.systemBlue
+            navigationController.navigationBar.tintColor = UIColor.label
             navigation.numberOfItems = String(numberOfItems)
             navigation.rowNumber = rowNumber
             if numberOfItems > 1{
@@ -95,13 +94,11 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0{
             numberOfItems = items.count
-            let cell = tableView.dequeueReusableCell(withIdentifier: K.itemCell, for: indexPath) as! ItemsTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: K.segueIdentifier.itemCell, for: indexPath) as! ItemsTableViewCell
             
-            //Category.cellsGradientColorSettings(cell.itemCellView, cell)
+            K.Colors.cellsShadowSettings(cell.itemViewCellShadow, cell)
             
-            CategoryFunc.cellsShadowSettings(cell.itemViewCellShadow, cell)
-            
-            CategoryFunc.cellsCornerRadiusSettings(cell.itemCellView)
+            K.Colors.cellsCornerRadiusSettings(cell.itemCellView)
         
             cell.itemName.text = items[indexPath.row].itemName
             cell.itemDescription.text = items[indexPath.row].itemDescription
@@ -109,20 +106,19 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
                 cell.accessoryType = .none
                 cell.itemName.textColor = UIColor.label
                 cell.itemDescription.textColor = UIColor.label
-                cell.itemImage.image = UIImage(named: "Hanger")
+                cell.itemImage.image = UIImage(named: K.Image.hanger)
             } else{
                 cell.accessoryType = .checkmark
                 cell.itemName.textColor = UIColor.systemGray4
                 cell.itemDescription.textColor = UIColor.systemGray4
-                cell.itemImage.image = UIImage(named: "HangerGray")
+                cell.itemImage.image = UIImage(named: K.Image.hangerGray)
             }
-            
-            Colors.clearGrayColorWhenTapped(for: cell)
+            K.Colors.clearGrayColorWhenTapped(for: cell)
             return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: K.itemCellButton, for: indexPath) as! ItemsTableViewCell
-            //cell.separatorInset = UIEdgeInsets(top: 0, left: cell.frame.width, bottom: 0, right: 0)
-            Colors.clearGrayColorWhenTapped(for: cell)
+            let cell = tableView.dequeueReusableCell(withIdentifier: K.segueIdentifier.itemCellButton, for: indexPath) as! ItemsTableViewCell
+
+            K.Colors.clearGrayColorWhenTapped(for: cell)
             return cell
         }
     }
@@ -162,7 +158,7 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
-        case K.itemToDetail:
+        case K.segueIdentifier.itemToDetail:
             itemToModify = true
             if let destination = segue.destination as? ItemDetailVC{
                 guard let selectedItemCell = sender as? ItemsTableViewCell else{
@@ -184,7 +180,7 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
                 
             }
             
-        case K.itemToNewDetail:
+        case K.segueIdentifier.itemToNewDetail:
             itemToModify = false
             if let destination = segue.destination as? ItemDetailVC{
                 destination.checkStatus = false
@@ -209,13 +205,12 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
                     let row = indexToModify!.row
                     items[row] = sourceItem!
                     saveItems(reloadData: true)
-                    //tableView.reloadRows(at: [indexToModify!], with: .none)
                 }
                 else {
                     let newItem = Item(context: context)
                     newItem.itemName = newItemName
                     newItem.itemDescription = newItemDescription
-                    newItem.checkStatus = newItemCheckStatus! //Item(itemName: newItemName!, itemDescription: newItemDescription!, checkStatus: newItemCheckStatus!)
+                    newItem.checkStatus = newItemCheckStatus! 
                     newItem.rowNumber = Int16(items.count)
                     newItem.parentCategory = selectedCategory
                     items.append(newItem)
@@ -301,7 +296,7 @@ extension ItemsTableVC{
     @objc func menuOfActions(){
         let action = UIAlertController()
         action.addAction(UIAlertAction(title: "New Item", style: .default, handler: { (action) in
-            self.performSegue(withIdentifier: K.itemToNewDetail, sender: self)
+            self.performSegue(withIdentifier: K.segueIdentifier.itemToNewDetail, sender: self)
         }))
         
         action.addAction(UIAlertAction(title: "Uncheck all", style: .default, handler: { (action) in
@@ -386,32 +381,6 @@ extension ItemsTableVC{
         items.append(itemSample2)
     }
 }
-// MARK: - Persistent Data - Codable
-//extension ItemsTableVC{
-//    func saveItems(){
-//        let encoder = PropertyListEncoder()
-//        do{
-//            let data = try encoder.encode(items)
-//            try data.write(to: dataFilePath!)
-//        } catch{
-//            print("Error encoding items array \(error)")
-//        }
-//
-//    }
-//
-//    func loadItems() -> [Item]?{
-//        if let data = try? Data(contentsOf: dataFilePath!){
-//            let decoder = PropertyListDecoder()
-//            do{
-//               items = try decoder.decode([Item].self, from: data)
-//            } catch{
-//                print("Error decoding items array \(error)")
-//            }
-//        }
-//        return items
-//    }
-//
 
-//}
 
 

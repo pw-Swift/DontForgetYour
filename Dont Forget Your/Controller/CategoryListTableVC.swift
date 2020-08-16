@@ -18,8 +18,6 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
     var numberOfItems: String?
     var rowNumber: Int?
     
-    var dataFilePath = K.dataFilePath
-    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     var entityCount: Int{
@@ -39,8 +37,8 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
         //print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
         tableView.tableFooterView = UIView()
-        navigationController?.delegate = self
         
+        navigationController?.delegate = self
         
         if entityCount != 0{
             loadCategory()
@@ -74,21 +72,21 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0{
-            let cell = tableView.dequeueReusableCell(withIdentifier: K.categoryCell, for: indexPath) as! CategoryListTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: K.segueIdentifier.categoryCell, for: indexPath) as! CategoryListTableViewCell
             
             //Configure the view containing the lables
-            CategoryFunc.cellsShadowSettings(cell.viewCategoryCellShadow, cell)
+            K.Colors.cellsShadowSettings(cell.viewCategoryCellShadow, cell)
             
-            CategoryFunc.cellsGradientColorSettings(cell.viewCategoryCell, cell)
+            K.Colors.cellsGradientColorSettings(cell.viewCategoryCell, cell)
             
-            CategoryFunc.cellsCornerRadiusSettings(cell.viewCategoryCell)
+            K.Colors.cellsCornerRadiusSettings(cell.viewCategoryCell)
             
             //Set the text of the label Category
             cell.category.text = categories[indexPath.row].title
             cell.numberOfItem.text = String(categories[indexPath.row].numberOfItem!)
             
             //No gray color when I touch a cell - Cancel gray color selection default
-            Colors.clearGrayColorWhenTapped(for: cell)
+            K.Colors.clearGrayColorWhenTapped(for: cell)
             return cell
             
         } else{
@@ -125,7 +123,7 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
     override func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
         if sourceIndexPath.section != proposedDestinationIndexPath.section {
             return sourceIndexPath
-        } else { return proposedDestinationIndexPath}
+        } else {return proposedDestinationIndexPath}
     }
     
 
@@ -135,17 +133,22 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
         // Get the new view controller using segue.destination.
         
             switch segue.identifier {
-            case K.cellNewCategory:
+                
+            case K.segueIdentifier.cellNewCategory:
                 if let destination = segue.destination as? NewCategory{
                     let category = categories[selectedCellIndex!.row]
                     
                     destination.categories = category
+                    destination.doubleCount = true
                 }
-            case K.categoryToNew:
+                
+            case K.segueIdentifier.categoryToNew:
                 if let destination = segue.destination as? NewCategory{
                     destination.listToCheck = categories
+                    destination.doubleCount = true
                 }
-            case K.categoryToItems:
+                
+            case K.segueIdentifier.categoryToItems:
                 if let destination = segue.destination as? ItemsTableVC{
                     if let selectedCell = sender as? CategoryListTableViewCell{
                         if let index = tableView.indexPath(for: selectedCell){
@@ -167,21 +170,19 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
 
         let sourceViewController = unwindSegue.source as? NewCategory
         let sourceButtonNewCategory = sourceViewController?.buttonNewCategory.titleLabel?.text
-        let sourceTextNewCategory = sourceViewController?.textNewCategory.text
-        let sourceNumberOfItems = sourceViewController?.numberOfItems
-        if sourceButtonNewCategory == "OK"{
+       
+        if sourceButtonNewCategory == K.buttonState.buttonValid{
             if categoryToModify == true {
                 if let cellIndex = selectedCellIndex{
                     let indexRowCategory = categories[cellIndex.row]
-                    categories[cellIndex.row].title = sourceTextNewCategory!
-                    indexRowCategory.numberOfItem = sourceNumberOfItems!
+                    indexRowCategory.title = sourceViewController?.textNewCategory.text
+                    indexRowCategory.numberOfItem = sourceViewController?.numberOfItems
                     saveCategory()
                 }
-
             } else {
                 let modifiedCategory = Category(context: context)
-                modifiedCategory.title = sourceTextNewCategory
-                modifiedCategory.numberOfItem = sourceNumberOfItems
+                modifiedCategory.title = sourceViewController?.textNewCategory.text
+                modifiedCategory.numberOfItem = sourceViewController?.numberOfItems
                 categories.append(modifiedCategory)
                 saveCategory()
             }
@@ -213,17 +214,16 @@ extension CategoryListTableVC {
             configuration.performsFirstActionWithFullSwipe = true
             
             return configuration
-        }else {
+        } else {
             return nil
         }
-       
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if indexPath.section == 0{
             let edit = UIContextualAction(style: .normal, title: "Edit") { (action, view, handler) in
                 self.selectedCellIndex = indexPath
-                self.performSegue(withIdentifier: K.cellNewCategory, sender: nil)
+                self.performSegue(withIdentifier: K.segueIdentifier.cellNewCategory, sender: nil)
                 handler(true)
             }
             edit.backgroundColor = .systemBlue
@@ -235,7 +235,6 @@ extension CategoryListTableVC {
         } else {
             return nil
         }
-
     }
 }
 
@@ -265,7 +264,7 @@ extension CategoryListTableVC{
     @objc func menuOfActions(){
         let action = UIAlertController()
         action.addAction(UIAlertAction(title: "New Title", style: .default, handler: { (action) in
-            self.performSegue(withIdentifier: K.categoryToNew, sender: self)
+            self.performSegue(withIdentifier: K.segueIdentifier.categoryToNew, sender: self)
         }))
         action.addAction(UIAlertAction(title: "Reorder rows", style: .default, handler: { (action) in
             self.tableView.isEditing = true
@@ -342,29 +341,4 @@ extension CategoryListTableVC{
         categories.append(categorySample3)
     }
 }
-// MARK: - Persistent Datas - Codable
-//extension CategoryListTableVC{
-//    func saveCategories(){
-//        let encoder = PropertyListEncoder()
-//        do {
-//            let data = try encoder.encode(self.categories)
-//            try data.write(to: self.dataFilePath!)
-//        } catch{
-//            print("Error encoding categories array \(error)")
-//        }
-//    }
-//
-//    func loadCategories() -> [Category]?{
-//        if let data = try? Data(contentsOf: dataFilePath!){
-//            let decoder = PropertyListDecoder()
-//            do{
-//                categories = try decoder.decode([Category].self, from: data)
-//            }catch{
-//                print("Error decoding categories array \(error)")
-//            }
-//        }
-//        return categories
-//    }
 
-//
-//}

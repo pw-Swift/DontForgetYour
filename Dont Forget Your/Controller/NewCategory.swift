@@ -23,8 +23,6 @@ class NewCategory: UIViewController {
     var listToCheck = [Category]()
     var numberOfItems: String?
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -45,29 +43,25 @@ class NewCategory: UIViewController {
     // MARK: - Navigation
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        for item in listToCheck{
+        for item in listToCheck {
             if item.title == textNewCategory.text{
-                doubleCount = true
-                break
-            } else{
                 doubleCount = false
+                alertDoubleEntry()
+                textNewCategory.becomeFirstResponder()
+                break
+            } else {
+                doubleCount = true
             }
         }
-        if doubleCount == true{
-            alertDoubleEntry()
-            textNewCategory.becomeFirstResponder()
-            return false}
-        else {
-            return true
-        }
+        return doubleCount
     }
     
 
     @IBAction func buttonPressed(_ sender: Any) {
-        if buttonNewCategory.titleLabel?.text == K.buttonUnvalid{
+        if buttonNewCategory.titleLabel?.text == K.buttonState.buttonUnvalid{
             self.dismiss(animated: true, completion: nil)
         } else {
-            return //saveNewCategory()
+            return
         }
     }
 }
@@ -75,19 +69,13 @@ class NewCategory: UIViewController {
 extension NewCategory {
     func configuration() {
 
-        CategoryFunc.shadowSettings(for: shadowView, in: radiusView)
-        //Category.gradientColorSettings(for: shadowView, in: radiusView)
-        //Category.cellsCornerRadiusSettings(radiusView)
- 
-        buttonNewCategory.backgroundColor = Colors.coral
+        K.Colors.shadowSettings(for: shadowView, in: radiusView)
+        
+        buttonNewCategory.backgroundColor = K.Colors.coral
         buttonNewCategory.layer.cornerRadius = 5
         buttonNewCategory.layer.masksToBounds = true
         buttonNewCategory.isHidden = true
         
-        /*textNewCategory.layer.cornerRadius = Constants.labelCornerRadius
-        textNewCategory.layer.borderColor = UIColor(named: "BlackWhite")?.cgColor
-        textNewCategory.layer.borderWidth = 1
-        textNewCategory.layer.masksToBounds = true*/
         textNewCategory.becomeFirstResponder()
         textNewCategory.autocapitalizationType = .words
         textNewCategory.attributedPlaceholder = NSAttributedString(string: "Enter a title", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray, NSAttributedString.Key.font : UIFont(name: "Helvetica Neue", size: 24) as Any])
@@ -100,7 +88,7 @@ extension NewCategory: UITextFieldDelegate{
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         buttonNewCategory.isHidden = true
-        buttonNewCategory.setTitle(K.buttonEmpty, for: .normal)
+        buttonNewCategory.setTitle(K.buttonState.buttonEmpty, for: .normal)
         return true
     }
     
@@ -111,10 +99,10 @@ extension NewCategory: UITextFieldDelegate{
     
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
         if textField.text == ""{
-            buttonNewCategory.setTitle(K.buttonUnvalid, for: .normal)
+            buttonNewCategory.setTitle(K.buttonState.buttonUnvalid, for: .normal)
         }
         else {
-            buttonNewCategory.setTitle(K.buttonValid, for: .normal)
+            buttonNewCategory.setTitle(K.buttonState.buttonValid, for: .normal)
         }
         return true
     }
@@ -129,20 +117,5 @@ extension NewCategory{
         let alert = UIAlertController(title: "Warning", message: "This entry already exists", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
-    }
-}
-
-// MARK: - Persistent Data - Core Data
-extension NewCategory{
-    func saveNewCategory(){
-        
-        let newCategory = Category(context: context)
-        newCategory.title = textNewCategory.text
-        newCategory.numberOfItem = ""
-        do{
-            try context.save()
-        } catch {
-            print("New category not saved: \(error)")
-        }
     }
 }

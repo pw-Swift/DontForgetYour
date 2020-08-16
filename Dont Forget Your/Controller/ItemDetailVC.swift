@@ -80,7 +80,7 @@ extension ItemDetailVC {
         buttonValidate.isHidden = true
         buttonValidate.layer.cornerRadius = K.labelCornerRadius
         buttonValidate.layer.masksToBounds = true
-        buttonValidate.backgroundColor = Colors.coral
+        buttonValidate.backgroundColor = K.Colors.coral
     }
 
 }
@@ -89,24 +89,27 @@ extension ItemDetailVC {
 extension ItemDetailVC: UITextFieldDelegate{
     func textFieldDidBeginEditing(_ textField: UITextField) {
         buttonValidate.isHidden = true
-        buttonValidate.setTitle(K.buttonEmpty, for: .normal)
+        buttonValidate.setTitle(K.buttonState.buttonEmpty, for: .normal)
         labelDetail.text = labelDetailText
     }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.endEditing(true)
         return true
     }
+    
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
         if textName.text != ""{
-            buttonValidate.setTitle(K.buttonValid, for: .normal)
+            buttonValidate.setTitle(K.buttonState.buttonValid, for: .normal)
             labelDetail.text = textName.text
         } else {
-            buttonValidate.setTitle(K.buttonUnvalid, for: .normal)
+            buttonValidate.setTitle(K.buttonState.buttonUnvalid, for: .normal)
             textName.placeholder = "A name must be entered to be valid"
             labelDetail.text = labelDetailText
         }
         return true
     }
+    
     func textFieldDidEndEditing(_ textField: UITextField) {
         buttonValidate.isHidden = false
     }
