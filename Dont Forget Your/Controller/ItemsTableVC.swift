@@ -18,17 +18,6 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
     var rowNumber = 0
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
-    var entityCount: Int{
-        let request = NSFetchRequest<Item>(entityName: "Item")
-        do {
-            let count = try context.count(for: request)
-            return count
-        } catch {
-            print("not able to count \(error)")
-            return 0
-        }
-    }
-    
     var selectedCategory: Category?
     
     override func viewDidLoad() {
@@ -37,11 +26,7 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
         
         navigationController?.delegate = self
         
-        if entityCount != 0{
-            loadItems()
-        } else {
-            loadSampleData()
-        }
+        loadItems()
         
         ItemFunc.itemsAppearance(navigationItem: navigationItem, navigationController: navigationController!)
         
@@ -56,7 +41,7 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
             navigation.rowNumber = rowNumber
             if numberOfItems > 1{
                 navigation.categories[rowNumber].numberOfItem = String("\(numberOfItems) items")
-            }else{
+            } else {
                 navigation.categories[rowNumber].numberOfItem = String("\(numberOfItems) item")
             }
             
@@ -353,12 +338,16 @@ extension ItemsTableVC{
         request.predicate = predicate
         request.sortDescriptors = [sortNumber]
         
-        do{
-            items = try context.fetch(request)
+        do {
+            let count = try context.count(for: request)
+            if count != 0{
+                items = try context.fetch(request)
+            } else {
+                loadSampleData()
+            }
         } catch {
             print("Items not loaded: \(error)")
         }
-        
     }
 }
 
@@ -367,6 +356,7 @@ extension ItemsTableVC{
     func loadSampleData(){
         
         let itemSample = Item(context: context)
+        itemSample.parentCategory = selectedCategory
         itemSample.itemName = "Delete Me"
         itemSample.itemDescription = "Swipe Left"
         itemSample.checkStatus = false
@@ -374,6 +364,7 @@ extension ItemsTableVC{
         items.append(itemSample)
         
         let itemSample2 = Item(context: context)
+        itemSample2.parentCategory = selectedCategory
         itemSample2.itemName = "Edit Me"
         itemSample2.itemDescription = "Swipe Right"
         itemSample2.checkStatus = true

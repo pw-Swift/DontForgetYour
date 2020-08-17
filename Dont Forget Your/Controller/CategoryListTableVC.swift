@@ -34,7 +34,7 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        //print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
         tableView.tableFooterView = UIView()
         
@@ -44,6 +44,7 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
             loadCategory()
         } else {
             loadSampleData()
+            saveCategory()
         }
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(menuOfActions))
@@ -338,7 +339,7 @@ extension CategoryListTableVC{
         let categorySample3 = Category(context: context)
         categorySample3.title = "New Category"
         categorySample3.numberOfItem = "Click on the add button"
-        categorySample2.rowNumber = 2
+        categorySample3.rowNumber = 2
         categories.append(categorySample3)
     }
 }
