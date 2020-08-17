@@ -34,7 +34,7 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
         tableView.tableFooterView = UIView()
         
@@ -264,6 +264,7 @@ extension CategoryListTableVC{
     @objc func menuOfActions(){
         let action = UIAlertController()
         action.addAction(UIAlertAction(title: "New Title", style: .default, handler: { (action) in
+            self.categoryToModify = false
             self.performSegue(withIdentifier: K.segueIdentifier.categoryToNew, sender: self)
         }))
         action.addAction(UIAlertAction(title: "Reorder rows", style: .default, handler: { (action) in
