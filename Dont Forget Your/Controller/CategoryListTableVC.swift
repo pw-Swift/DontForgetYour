@@ -17,7 +17,6 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
     var categoryToModify: Bool = false
     var numberOfItems: String?
     var rowNumber: Int?
-    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     var entityCount: Int{
@@ -77,6 +76,7 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
             
             //Configure the view containing the lables
             K.Colors.cellsShadowSettings(cell.viewCategoryCellShadow, cell)
+            
             
             K.Colors.cellsGradientColorSettings(cell.viewCategoryCell, cell)
             
