@@ -15,6 +15,7 @@
 		9E72157C24D5403F00C93F48 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E72157B24D5403F00C93F48 /* Constants.swift */; };
 		9E9B027524D5FC5F008E89E3 /* NewCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9B027424D5FC5F008E89E3 /* NewCategory.swift */; };
 		9E9CC89224D75ADB007B7FEC /* ItemFunc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9CC89124D75ADB007B7FEC /* ItemFunc.swift */; };
+		9EA65F7F24EFF00700961E46 /* TestTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA65F7E24EFF00700961E46 /* TestTableVC.swift */; };
 		9EC8977E24D4836B00C2C834 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC8977D24D4836B00C2C834 /* AppDelegate.swift */; };
 		9EC8978024D4836B00C2C834 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC8977F24D4836B00C2C834 /* SceneDelegate.swift */; };
 		9EC8978524D4836B00C2C834 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9EC8978324D4836B00C2C834 /* Main.storyboard */; };
@@ -22,6 +23,8 @@
 		9EC8978A24D4836C00C2C834 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9EC8978824D4836C00C2C834 /* LaunchScreen.storyboard */; };
 		9EC8979624D484F500C2C834 /* CategoryListTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC8979524D484F500C2C834 /* CategoryListTableVC.swift */; };
 		9EC8979824D4853100C2C834 /* CategoryListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC8979724D4853100C2C834 /* CategoryListTableViewCell.swift */; };
+		9EE2BCCF24EFD7C4005A7318 /* NewCategoryListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE2BCCD24EFD7C4005A7318 /* NewCategoryListTableViewCell.swift */; };
+		9EE2BCD024EFD7C4005A7318 /* NewCategoryListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9EE2BCCE24EFD7C4005A7318 /* NewCategoryListTableViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +37,7 @@
 		9E72AB8124E2F01E00A491E0 /* Dont Forget Your.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Dont Forget Your.entitlements"; sourceTree = "<group>"; };
 		9E9B027424D5FC5F008E89E3 /* NewCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCategory.swift; sourceTree = "<group>"; };
 		9E9CC89124D75ADB007B7FEC /* ItemFunc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemFunc.swift; sourceTree = "<group>"; };
+		9EA65F7E24EFF00700961E46 /* TestTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTableVC.swift; sourceTree = "<group>"; };
 		9EC8977A24D4836B00C2C834 /* Dont Forget Your.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dont Forget Your.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EC8977D24D4836B00C2C834 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9EC8977F24D4836B00C2C834 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -43,6 +47,8 @@
 		9EC8978B24D4836C00C2C834 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9EC8979524D484F500C2C834 /* CategoryListTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListTableVC.swift; sourceTree = "<group>"; };
 		9EC8979724D4853100C2C834 /* CategoryListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListTableViewCell.swift; sourceTree = "<group>"; };
+		9EE2BCCD24EFD7C4005A7318 /* NewCategoryListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCategoryListTableViewCell.swift; sourceTree = "<group>"; };
+		9EE2BCCE24EFD7C4005A7318 /* NewCategoryListTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewCategoryListTableViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +108,7 @@
 		9EC8979124D483E300C2C834 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				9EA65F7E24EFF00700961E46 /* TestTableVC.swift */,
 				9EC8979524D484F500C2C834 /* CategoryListTableVC.swift */,
 				9E9B027424D5FC5F008E89E3 /* NewCategory.swift */,
 				9E4A379524D73EE500C32AC6 /* ItemsTableVC.swift */,
@@ -123,6 +130,8 @@
 			isa = PBXGroup;
 			children = (
 				9EC8978324D4836B00C2C834 /* Main.storyboard */,
+				9EE2BCCD24EFD7C4005A7318 /* NewCategoryListTableViewCell.swift */,
+				9EE2BCCE24EFD7C4005A7318 /* NewCategoryListTableViewCell.xib */,
 				9EC8979724D4853100C2C834 /* CategoryListTableViewCell.swift */,
 				9E4A379724D73F0C00C32AC6 /* ItemsTableViewCell.swift */,
 			);
@@ -187,6 +196,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9EE2BCD024EFD7C4005A7318 /* NewCategoryListTableViewCell.xib in Resources */,
 				9EC8978A24D4836C00C2C834 /* LaunchScreen.storyboard in Resources */,
 				9EC8978724D4836C00C2C834 /* Assets.xcassets in Resources */,
 				9EC8978524D4836B00C2C834 /* Main.storyboard in Resources */,
@@ -204,9 +214,11 @@
 				9EC8979624D484F500C2C834 /* CategoryListTableVC.swift in Sources */,
 				9E589B0624E6CB02007F4000 /* Data Model.xcdatamodeld in Sources */,
 				9E9CC89224D75ADB007B7FEC /* ItemFunc.swift in Sources */,
+				9EE2BCCF24EFD7C4005A7318 /* NewCategoryListTableViewCell.swift in Sources */,
 				9EC8977E24D4836B00C2C834 /* AppDelegate.swift in Sources */,
 				9E9B027524D5FC5F008E89E3 /* NewCategory.swift in Sources */,
 				9EC8978024D4836B00C2C834 /* SceneDelegate.swift in Sources */,
+				9EA65F7F24EFF00700961E46 /* TestTableVC.swift in Sources */,
 				9E4A379624D73EE500C32AC6 /* ItemsTableVC.swift in Sources */,
 				9EC8979824D4853100C2C834 /* CategoryListTableViewCell.swift in Sources */,
 				9E4A379A24D7439700C32AC6 /* ItemDetailVC.swift in Sources */,
@@ -363,7 +375,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.3;
+				MARKETING_VERSION = 0.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pierrewaroquier.DontForgetYour;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -386,7 +398,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.3;
+				MARKETING_VERSION = 0.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pierrewaroquier.DontForgetYour;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

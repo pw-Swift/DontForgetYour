@@ -36,6 +36,12 @@ struct K {
         static let sadFace = "SadFace"
         static let hanger = "Hanger"
         static let hangerGray = "HangerGray"
+        static let hangerFlatFlesh = "HangerFlatFlesh"
+        static let hangerMelonMelody = "HangerMelonMelody"
+        static let hangerLivid = "HangerLivid"
+        static let hangerSpray = "HangerSpray"
+        static let hangerParadiseGreen = "HangerParadiseGreen"
+        
     }
     
     struct buttonState{
@@ -45,10 +51,27 @@ struct K {
     }
     
     struct Colors {
-        
         static let coral = UIColor(red: 231/255, green: 62/255, blue: 1/255, alpha: 1.0)
-        
+
         static let coralGradient = UIColor(red: 230/255, green: 97/255, blue: 51/255, alpha: 1.0)
+        static let flatFlesh = UIColor(red: 250/255, green: 211/255, blue: 144/255, alpha: 1.0)
+        static let melonMelody = UIColor(red: 248/255, green: 194/255, blue: 145/255, alpha: 1.0)
+        static let livid = UIColor(red: 106/255, green: 137/255, blue: 204/255, alpha: 1.0)
+        static let spray = UIColor(red: 103/255, green: 204/255, blue: 221/255, alpha: 1.0)
+        static let paradiseGreen = UIColor(red: 184/255, green: 233/255, blue: 148/255, alpha: 1.0)
+        
+        static let colorArray = [flatFlesh, melonMelody, livid, spray, paradiseGreen]
+        
+        //Others colors for next steps - Beta version
+        static let carrotOrange = UIColor(red: 229/255, green: 142/255, blue: 38/255, alpha: 1.0)
+        static let jalapenoRed = UIColor(red: 183/255, green: 21/255, blue: 64/255, alpha: 1.0)
+        static let darkSapphire = UIColor(red: 12/255, green: 36/255, blue: 97/255, alpha: 0.5)
+        static let forestBlues = UIColor(red: 10/255, green: 61/255, blue: 98/255, alpha: 1.0)
+        static let reefEncounter = UIColor(red: 7/255, green: 153/255, blue: 146/255, alpha: 1.0)
+        
+        static let colorArrayDark = [carrotOrange, jalapenoRed, darkSapphire, forestBlues, reefEncounter]
+        //#####################################
+        
         
         static let labelWhite = UIColor(named: "LabelWhite")
         

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19G2021" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Category" representedClassName=".Category" syncable="YES" codeGenerationType="class">
+        <attribute name="categoryColor" attributeType="String"/>
         <attribute name="numberOfItem" attributeType="String"/>
         <attribute name="rowNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="title" attributeType="String"/>
@@ -14,7 +15,7 @@
         <relationship name="parentCategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Category" inverseName="items" inverseEntity="Category"/>
     </entity>
     <elements>
-        <element name="Category" positionX="-5175.8359375" positionY="-1540.65625" width="128" height="103"/>
+        <element name="Category" positionX="-5175.8359375" positionY="-1540.65625" width="128" height="118"/>
         <element name="Item" positionX="-4943.17578125" positionY="-1483.35546875" width="128" height="118"/>
     </elements>
 </model>

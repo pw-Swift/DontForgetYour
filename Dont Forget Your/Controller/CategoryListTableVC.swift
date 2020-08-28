@@ -17,6 +17,9 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
     var categoryToModify: Bool = false
     var numberOfItems: String?
     var rowNumber: Int?
+    
+    var index: IndexPath?
+    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     var entityCount: Int{
@@ -32,23 +35,51 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        tableView.register(UINib(nibName: "NewCategoryListTableViewCell", bundle: nil), forCellReuseIdentifier: "ReusableCell")
         //print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-        
+
         tableView.tableFooterView = UIView()
         
         navigationController?.delegate = self
         
-        if entityCount != 0{
+        //navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(menuOfActions))
+        
+        if entityCount != 0 {
             loadCategory()
         } else {
             loadSampleData()
             saveCategory()
         }
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(menuOfActions))
     }
-    
+
+
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        if let destination = viewController as? ItemsTableVC{
+            let appearance = UINavigationBarAppearance()
+            appearance.backgroundColor = UIColor(named: categories[index!.row].categoryColor!)
+            //appearance.titleTextAttributes = [NSAttributedString.Key
+                //.font: UIFont(name: "Copperplate", size: 24)!]
+            //appearance.largeTitleTextAttributes = [NSAttributedString.Key
+                //.font: UIFont(name: "Copperplate", size: 32)!]
+            destination.navigationItem.standardAppearance = appearance
+            destination.navigationItem.compactAppearance = appearance
+            destination.navigationItem.scrollEdgeAppearance = appearance
+            
+            //destination.navigationController?.navigationBar.backgroundColor = UIColor(named: categories[index!.row].categoryColor!)
+        } else {
+            
+            let appearance = UINavigationBarAppearance()
+            appearance.backgroundColor = UIColor.systemBackground
+            appearance.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "Snell Roundhand", size: 24)!]
+            appearance.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "Snell Roundhand", size: 32)!]
+
+            navigationItem.standardAppearance = appearance
+            navigationItem.compactAppearance = appearance
+            navigationItem.scrollEdgeAppearance = appearance
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(menuOfActions))
+            tableView.reloadData()
+        }
+    }
 
     // MARK: - Table view data source
 
@@ -57,7 +88,7 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0{
+        if section == 0 {
             return categories.count
         }
         else {
@@ -66,31 +97,76 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 120
+        if indexPath.section == 0 {
+            return 75
+        } else {
+            return 240
+        }
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0{
+        if indexPath.section == 0 {
+            /*
             let cell = tableView.dequeueReusableCell(withIdentifier: K.segueIdentifier.categoryCell, for: indexPath) as! CategoryListTableViewCell
             
             //Configure the view containing the lables
             K.Colors.cellsShadowSettings(cell.viewCategoryCellShadow, cell)
             
-            
-            K.Colors.cellsGradientColorSettings(cell.viewCategoryCell, cell)
+            //K.Colors.cellsGradientColorSettings(cell.viewCategoryCell, cell)
             
             K.Colors.cellsCornerRadiusSettings(cell.viewCategoryCell)
+            
+            //No gray color when I touch a cell - Cancel gray color selection default
+            K.Colors.clearGrayColorWhenTapped(for: cell)
             
             //Set the text of the label Category
             cell.category.text = categories[indexPath.row].title
             cell.numberOfItem.text = String(categories[indexPath.row].numberOfItem!)
+            cell.viewCategoryCell.backgroundColor = UIColor(named: categories[indexPath.row].categoryColor!)
+            */
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ReusableCell", for: indexPath) as! NewCategoryListTableViewCell
             
-            //No gray color when I touch a cell - Cancel gray color selection default
             K.Colors.clearGrayColorWhenTapped(for: cell)
+            
+            let color = UIColor(named: categories[indexPath.row].categoryColor!)
+            cell.viewItems.backgroundColor = color
+            
+            var itemCount: Int{
+                let request = NSFetchRequest<Item>(entityName: "Item")
+                let predicate = NSPredicate(format: "parentCategory.title MATCHES %@", categories[indexPath.row].title!)
+                //let predicate = NSPredicate(format: "checkStatus == %@", "true")
+                request.predicate = predicate
+                do {
+                    let count = try context.count(for: request)
+                    return count
+                } catch {
+                    fatalError("not able to count the items of a category \(error)")
+                }
+            
+            }
+            var itemCheckedCount: Int{
+                let request = NSFetchRequest<Item>(entityName: "Item")
+                let predicate = NSPredicate(format: "parentCategory.title MATCHES %@ and checkStatus == true", categories[indexPath.row].title!)
+                //let predicate = NSPredicate(format: "checkStatus == %@", "true")
+                request.predicate = predicate
+                do {
+                    let count = try context.count(for: request)
+                    return count
+                } catch {
+                    fatalError("not able to count the checked items of a category \(error)")
+                }
+            
+            }
+            
+            cell.labelNumberItems.text = String(itemCount) //String(categories[indexPath.row].numberOfItem!)
+            cell.labelNumberItemsRight.text = String(itemCheckedCount)
+            cell.labelCategory.text = categories[indexPath.row].title
+            cell.imageRight.tintColor = color
+
             return cell
             
-        } else{
+        } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ButtonAdd", for: indexPath) as! CategoryListTableViewCell
             tableView.rowHeight = 120
             return cell
@@ -98,9 +174,14 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.section == 0{
+        if indexPath.section == 0 {
             return true
-        } else { return false}
+        } else { return false }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        index = indexPath
+        performSegue(withIdentifier: K.segueIdentifier.categoryToItems, sender: self)
     }
     
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
@@ -116,7 +197,7 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
         categories.remove(at: sourceIndexPath.row)
         categories.insert(rowToMove, at: destinationIndexPath.row)
         
-        for i in 0..<categories.count{
+        for i in 0..<categories.count {
             categories[Int(i)].rowNumber = Int16(i)
         }
     }
@@ -124,11 +205,9 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
     override func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
         if sourceIndexPath.section != proposedDestinationIndexPath.section {
             return sourceIndexPath
-        } else {return proposedDestinationIndexPath}
+        } else { return proposedDestinationIndexPath }
     }
-    
 
-    
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
@@ -138,7 +217,6 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
             case K.segueIdentifier.cellNewCategory:
                 if let destination = segue.destination as? NewCategory{
                     let category = categories[selectedCellIndex!.row]
-                    
                     destination.categories = category
                     destination.doubleCount = true
                 }
@@ -150,14 +228,20 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
                 }
                 
             case K.segueIdentifier.categoryToItems:
-                if let destination = segue.destination as? ItemsTableVC{
-                    if let selectedCell = sender as? CategoryListTableViewCell{
-                        if let index = tableView.indexPath(for: selectedCell){
-                            destination.navigationItem.title = categories[index.row].title
-                            destination.selectedCategory = categories[index.row]
-                            destination.rowNumber = index.row
-                        }
-                    }
+//                if let destination = segue.destination as? ItemsTableVC, let selectedCell = sender as? CategoryListTableViewCell, let index = tableView.indexPath(for: selectedCell)
+//               {
+//
+//                    destination.navigationItem.title = categories[index.row].title
+//                    destination.selectedCategory = categories[index.row]
+//                    destination.rowNumber = index.row
+//
+//                }
+                
+                if let destination = segue.destination as? ItemsTableVC, let indexRow = index{
+                    destination.navigationItem.title = categories[indexRow.row].title
+                    destination.selectedCategory = categories[indexRow.row]
+                    destination.rowNumber = indexRow.row
+                    destination.colorName = categories[indexRow.row].categoryColor!
                 }
             default:
                 return
@@ -169,35 +253,38 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
     
     @IBAction func unwindToCategoryListTableVC(_ unwindSegue: UIStoryboardSegue) {
 
-        let sourceViewController = unwindSegue.source as? NewCategory
-        let sourceButtonNewCategory = sourceViewController?.buttonNewCategory.titleLabel?.text
-       
-        if sourceButtonNewCategory == K.buttonState.buttonValid{
-            if categoryToModify == true {
-                if let cellIndex = selectedCellIndex{
-                    let indexRowCategory = categories[cellIndex.row]
-                    indexRowCategory.title = sourceViewController?.textNewCategory.text
-                    indexRowCategory.numberOfItem = sourceViewController?.numberOfItems
+        if let sourceViewController = unwindSegue.source as? NewCategory{
+            let sourceButtonNewCategory = sourceViewController.buttonNewCategory.titleLabel?.text
+           
+            if sourceButtonNewCategory == K.buttonState.buttonValid {
+                if categoryToModify == true {
+                    if let cellIndex = selectedCellIndex {
+                        let indexRowCategory = categories[cellIndex.row]
+                        indexRowCategory.title = sourceViewController.textNewCategory.text
+                        indexRowCategory.numberOfItem = sourceViewController.numberOfItems
+                        indexRowCategory.categoryColor = sourceViewController.selectedColor
+                        saveCategory()
+                    }
+                } else {
+                    let modifiedCategory = Category(context: context)
+                    modifiedCategory.title = sourceViewController.textNewCategory.text
+                    modifiedCategory.numberOfItem = sourceViewController.numberOfItems
+                    modifiedCategory.categoryColor = sourceViewController.selectedColor
+                    categories.append(modifiedCategory)
                     saveCategory()
                 }
-            } else {
-                let modifiedCategory = Category(context: context)
-                modifiedCategory.title = sourceViewController?.textNewCategory.text
-                modifiedCategory.numberOfItem = sourceViewController?.numberOfItems
-                categories.append(modifiedCategory)
-                saveCategory()
             }
-        }
-        else {
-            return
-        }
-        
+            else {
+                return
+            }
+        } 
         tableView.reloadData()
     }
     
  
     @IBAction func buttonAdd(_ sender: Any) {
         categoryToModify = false
+        
     }
 }
 
@@ -328,18 +415,21 @@ extension CategoryListTableVC{
         categorySample.title = "Delete Me"
         categorySample.numberOfItem = "Swipe Left"
         categorySample.rowNumber = 0
+        categorySample.categoryColor = "FlatFlesh"
         categories.append(categorySample)
         
         let categorySample2 = Category(context: context)
         categorySample2.title = "Edit Me"
         categorySample2.numberOfItem = "Swipe Right"
         categorySample2.rowNumber = 1
+        categorySample2.categoryColor = "Livid"
         categories.append(categorySample2)
         
         let categorySample3 = Category(context: context)
         categorySample3.title = "New Category"
         categorySample3.numberOfItem = "Click on the add button"
         categorySample3.rowNumber = 2
+        categorySample3.categoryColor = "ParadiseGreen"
         categories.append(categorySample3)
     }
 }

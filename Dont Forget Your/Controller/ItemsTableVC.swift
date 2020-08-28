@@ -9,47 +9,67 @@
 import UIKit
 import CoreData
 
-class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
+class ItemsTableVC: UITableViewController /*,UINavigationControllerDelegate*/ {
 
     var items: [Item] = []
     var itemToModify: Bool = true
     var indexToModify: IndexPath?
     var numberOfItems = 0
     var rowNumber = 0
+    var colorName = "FlatFlesh"
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     var selectedCategory: Category?
+    
+    var imageName: UIImage {
+        get{
+            let color = colorName
+            switch color {
+            case "FlatFlesh":
+                return UIImage(named: K.Image.hangerFlatFlesh)!
+            case "MelonMelody":
+                return UIImage(named: K.Image.hangerMelonMelody)!
+            case "Livid":
+                return UIImage(named: "HangerLivid")!
+            case "Spray":
+                return UIImage(named: "HangerSpray")!
+            case "ParadiseGreen":
+                return UIImage(named: "HangerParadiseGreen")!
+            default:
+                return UIImage(named: "Hanger")!
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
         
-        navigationController?.delegate = self
+        //navigationController?.delegate = self
         
         loadItems()
         
-        ItemFunc.itemsAppearance(navigationItem: navigationItem, navigationController: navigationController!)
-        
+        //ItemFunc.itemsAppearance(navigationItem: navigationItem, navigationController: navigationController!, color: colorName)
+       // navigationController?.navigationBar.backgroundColor = UIColor(named: colorName)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(menuOfActions))
-        UINavigationBar.appearance().tintColor = UIColor.lightText
+        //UINavigationBar.appearance().tintColor = UIColor.lightText
     }
-  
+    
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        if let navigation = viewController as? CategoryListTableVC{
-            navigationController.navigationBar.tintColor = UIColor.label
+        if let navigation = viewController as? CategoryListTableVC {
             navigation.numberOfItems = String(numberOfItems)
             navigation.rowNumber = rowNumber
-            if numberOfItems > 1{
-                navigation.categories[rowNumber].numberOfItem = String("\(numberOfItems) items")
-            } else {
-                navigation.categories[rowNumber].numberOfItem = String("\(numberOfItems) item")
-            }
+//            if numberOfItems > 1{
+//                navigation.categories[rowNumber].numberOfItem = String("\(numberOfItems) items")
+//            } else {
+//                navigation.categories[rowNumber].numberOfItem = String("\(numberOfItems) item")
+//            }
             
-            //test.saveCategories()
+            navigation.categories[rowNumber].numberOfItem = String(numberOfItems)
             navigation.saveCategory()
-            //navigation.tableView.reloadData()
         }
     }
+    
     
     // MARK: - Table view data source
 
@@ -77,7 +97,7 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0{
+        if indexPath.section == 0 {
             numberOfItems = items.count
             let cell = tableView.dequeueReusableCell(withIdentifier: K.segueIdentifier.itemCell, for: indexPath) as! ItemsTableViewCell
             
@@ -87,12 +107,14 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
         
             cell.itemName.text = items[indexPath.row].itemName
             cell.itemDescription.text = items[indexPath.row].itemDescription
+            
+            
             if items[indexPath.row].checkStatus == false{
                 cell.accessoryType = .none
                 cell.itemName.textColor = UIColor.label
                 cell.itemDescription.textColor = UIColor.label
-                cell.itemImage.image = UIImage(named: K.Image.hanger)
-            } else{
+                cell.itemImage.image = imageName //UIImage(named: K.Image.hanger)
+            } else {
                 cell.accessoryType = .checkmark
                 cell.itemName.textColor = UIColor.systemGray4
                 cell.itemDescription.textColor = UIColor.systemGray4
@@ -169,7 +191,6 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
             itemToModify = false
             if let destination = segue.destination as? ItemDetailVC{
                 destination.checkStatus = false
-                //destination.item = Item(itemName: "", itemDescription: "", checkStatus: false)
                 destination.labelDetailText = "New Item"
             }
         default:
@@ -185,7 +206,7 @@ class ItemsTableVC: UITableViewController, UINavigationControllerDelegate {
             let newItemCheckStatus = sourceViewController.checkStatus
             let sourceItem = sourceViewController.item
             
-            if sourceViewController.buttonValidate.titleLabel?.text == "OK"{
+            if sourceViewController.buttonValidate.titleLabel?.text == "OK" {
                 if itemToModify == true{
                     let row = indexToModify!.row
                     items[row] = sourceItem!
@@ -231,18 +252,18 @@ extension ItemsTableVC {
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if indexPath.section == 0{
+        if indexPath.section == 0 {
             let checkmark = tableView.cellForRow(at: indexPath)?.accessoryType
             let cell = tableView.cellForRow(at: indexPath) as? ItemsTableViewCell
             var action = UIContextualAction()
-            if checkmark == .checkmark{
+            if checkmark == .checkmark {
                 action = UIContextualAction(style: .normal, title: "Uncheck") { (action, view, handler) in
                     
                     self.items[indexPath.row].checkStatus = false
                     cell?.accessoryType = .none
                     cell?.itemName.textColor = UIColor.label
                     cell?.itemDescription.textColor = UIColor.label
-                    cell?.itemImage.image = UIImage(named: "Hanger")
+                    cell?.itemImage.image = self.imageName// UIImage(named: "Hanger")
                     action.backgroundColor = UIColor.systemBlue
                     self.saveItems(reloadData: false)
                     handler(true)
@@ -328,7 +349,6 @@ extension ItemsTableVC{
             }
             //tableView.reloadData()
         }
-
     }
     
     func loadItems(){

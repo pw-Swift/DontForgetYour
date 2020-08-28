@@ -22,6 +22,7 @@ class NewCategory: UIViewController {
     var doubleCount = false
     var listToCheck = [Category]()
     var numberOfItems: String?
+    var selectedColor = "FlatFlesh"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,6 +65,34 @@ class NewCategory: UIViewController {
             return
         }
     }
+    
+    @IBAction func colorPicked(_ sender: UIButton) {
+        let color = sender.currentTitleColor
+        
+        switch color {
+        case UIColor(named: "FlatFlesh"):
+            shadowView.backgroundColor = K.Colors.flatFlesh
+            selectedColor = "FlatFlesh"
+        case UIColor(named: "MelonMelody"):
+            shadowView.backgroundColor = K.Colors.melonMelody
+            selectedColor = "MelonMelody"
+        case UIColor(named: "Livid"):
+            shadowView.backgroundColor = K.Colors.livid
+            selectedColor = "Livid"
+        case UIColor(named: "Spray"):
+            shadowView.backgroundColor = K.Colors.spray
+            selectedColor = "Spray"
+        case UIColor(named: "ParadiseGreen"):
+            shadowView.backgroundColor = K.Colors.paradiseGreen
+            selectedColor = "ParadiseGreen"
+        default:
+            shadowView.backgroundColor = K.Colors.flatFlesh
+            selectedColor = "FlatFlesh"
+        }
+        
+
+    }
+    
 }
 // MARK: - Label, Text, Button configuration
 extension NewCategory {

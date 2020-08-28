@@ -10,15 +10,19 @@
 import UIKit
 struct ItemFunc: Codable {
 
-    static func itemsAppearance(navigationItem: UINavigationItem, navigationController: UINavigationController){
+    static func itemsAppearance(navigationItem: UINavigationItem, navigationController: UINavigationController, color: String){
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
-        appearance.backgroundColor = UIColor.init(named: "CoralGradient")
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.lightText]
-        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.lightText]
+        appearance.backgroundColor = UIColor(named: color) //K.Colors.coralGradient
+        appearance.titleTextAttributes = [
+            .foregroundColor: UIColor.label,
+            .font: UIFont(name: "Snell Roundhand", size: 17)!]//[.foregroundColor: UIColor.lightText]
+        appearance.largeTitleTextAttributes = [
+            .foregroundColor: UIColor.label,
+            .font: UIFont(name: "Snell Roundhand", size: 34)!]//[.foregroundColor: UIColor.lightText]
         navigationItem.scrollEdgeAppearance = appearance
         navigationItem.compactAppearance = appearance
         navigationItem.standardAppearance = appearance
-        navigationController.navigationBar.tintColor = UIColor.lightText
+        navigationController.navigationBar.tintColor = UIColor.label//UIColor.lightText
     }
 }
