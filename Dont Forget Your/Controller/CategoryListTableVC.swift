@@ -41,7 +41,7 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
         tableView.tableFooterView = UIView()
         
         navigationController?.delegate = self
-        
+     
         //navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(menuOfActions))
         
         if entityCount != 0 {
@@ -161,6 +161,11 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
             
             cell.labelNumberItems.text = String(itemCount) //String(categories[indexPath.row].numberOfItem!)
             cell.labelNumberItemsRight.text = String(itemCheckedCount)
+            if itemCount < 2 {
+                cell.labelText.text = "item"
+            } else {
+                cell.labelText.text = "items"
+            }
             cell.labelCategory.text = categories[indexPath.row].title
             cell.imageRight.tintColor = color
 
@@ -412,21 +417,21 @@ extension CategoryListTableVC{
      func loadSampleData () {
         
         let categorySample = Category(context: context)
-        categorySample.title = "Delete Me"
+        categorySample.title = "Delete Me 👈"
         categorySample.numberOfItem = "Swipe Left"
         categorySample.rowNumber = 0
         categorySample.categoryColor = "FlatFlesh"
         categories.append(categorySample)
         
         let categorySample2 = Category(context: context)
-        categorySample2.title = "Edit Me"
+        categorySample2.title = "👉 Edit Me"
         categorySample2.numberOfItem = "Swipe Right"
         categorySample2.rowNumber = 1
         categorySample2.categoryColor = "Livid"
         categories.append(categorySample2)
         
         let categorySample3 = Category(context: context)
-        categorySample3.title = "New Category"
+        categorySample3.title = "👇 New Category"
         categorySample3.numberOfItem = "Click on the add button"
         categorySample3.rowNumber = 2
         categorySample3.categoryColor = "ParadiseGreen"

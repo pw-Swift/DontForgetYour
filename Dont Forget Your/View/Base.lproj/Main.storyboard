@@ -127,11 +127,18 @@
                                                         <segue destination="DRX-58-NlT" kind="presentation" identifier="CategoryToNew" id="EyS-Ze-6Z8"/>
                                                     </connections>
                                                 </button>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="BackGround" translatesAutoresizingMaskIntoConstraints="NO" id="kgQ-QS-WYc">
+                                                    <rect key="frame" x="0.0" y="0.0" width="355" height="100"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                             <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="kgQ-QS-WYc" secondAttribute="trailing" id="J73-zs-L0a"/>
                                                 <constraint firstItem="3Gq-uL-xQf" firstAttribute="centerX" secondItem="vik-eT-Dep" secondAttribute="centerX" id="Sfd-b2-Mxl"/>
+                                                <constraint firstAttribute="bottom" secondItem="kgQ-QS-WYc" secondAttribute="bottom" id="YLh-io-2ZP"/>
+                                                <constraint firstItem="kgQ-QS-WYc" firstAttribute="top" secondItem="vik-eT-Dep" secondAttribute="top" id="m0e-Es-6dA"/>
                                                 <constraint firstItem="3Gq-uL-xQf" firstAttribute="centerY" secondItem="vik-eT-Dep" secondAttribute="centerY" id="r0t-TT-YbB"/>
+                                                <constraint firstItem="kgQ-QS-WYc" firstAttribute="leading" secondItem="vik-eT-Dep" secondAttribute="leading" id="zOm-d7-hHU"/>
                                             </constraints>
                                         </view>
                                     </subviews>
@@ -168,7 +175,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lef-1H-lfo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="534.78260869565224" y="145.98214285714286"/>
+            <point key="canvasLocation" x="533.60000000000002" y="145.56650246305421"/>
         </scene>
         <!--Item-->
         <scene sceneID="w9d-fS-7Os">
@@ -610,6 +617,7 @@
     </inferredMetricsTieBreakers>
     <resources>
         <image name="AddButton" width="78" height="78"/>
+        <image name="BackGround" width="368" height="251"/>
         <image name="FlatFlesh" width="44" height="44"/>
         <image name="Hanger" width="360" height="360"/>
         <image name="Livid" width="44" height="44"/>
