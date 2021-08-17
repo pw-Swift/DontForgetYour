@@ -223,6 +223,7 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
                 if let destination = segue.destination as? NewCategory{
                     let category = categories[selectedCellIndex!.row]
                     destination.categories = category
+                    destination.listToCheck = categories
                     destination.doubleCount = true
                 }
                 
