@@ -26,7 +26,6 @@ class NewCategory: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         configuration()
         
         if let category = categories {
