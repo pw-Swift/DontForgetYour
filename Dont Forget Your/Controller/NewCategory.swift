@@ -120,6 +120,10 @@ extension NewCategory: UITextFieldDelegate{
         return true
     }
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        buttonNewCategory.isHidden = true
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.endEditing(true)
         return true
@@ -128,9 +132,11 @@ extension NewCategory: UITextFieldDelegate{
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
         if textField.text == ""{
             buttonNewCategory.setTitle(K.buttonState.buttonUnvalid, for: .normal)
+            buttonNewCategory.backgroundColor = K.Colors.coral
         }
         else {
             buttonNewCategory.setTitle(K.buttonState.buttonValid, for: .normal)
+            buttonNewCategory.backgroundColor = K.Colors.waterfall
         }
         return true
     }

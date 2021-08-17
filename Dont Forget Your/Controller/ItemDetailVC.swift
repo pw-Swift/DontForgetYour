@@ -102,10 +102,12 @@ extension ItemDetailVC: UITextFieldDelegate{
         if textName.text != ""{
             buttonValidate.setTitle(K.buttonState.buttonValid, for: .normal)
             labelDetail.text = textName.text
+            buttonValidate.backgroundColor = K.Colors.waterfall
         } else {
             buttonValidate.setTitle(K.buttonState.buttonUnvalid, for: .normal)
             textName.placeholder = "A name must be entered to be valid"
             labelDetail.text = labelDetailText
+            buttonValidate.backgroundColor = K.Colors.coral
         }
         return true
     }

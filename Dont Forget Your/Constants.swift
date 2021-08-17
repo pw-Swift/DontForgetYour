@@ -70,6 +70,8 @@ struct K {
         static let reefEncounter = UIColor(red: 7/255, green: 153/255, blue: 146/255, alpha: 1.0)
         
         static let colorArrayDark = [carrotOrange, jalapenoRed, darkSapphire, forestBlues, reefEncounter]
+        
+        static let waterfall = UIColor(red: 0.22, green: 0.68, blue: 0.66, alpha: 1.0) //Bouton
         //#####################################
         
         
