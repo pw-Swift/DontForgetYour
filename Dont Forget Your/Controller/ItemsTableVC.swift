@@ -385,7 +385,7 @@ extension ItemsTableVC{
         
         let itemSample2 = Item(context: context)
         itemSample2.parentCategory = selectedCategory
-        itemSample2.itemName = "Edit Me"
+        itemSample2.itemName = "Uncheck Me"
         itemSample2.itemDescription = "Swipe Right"
         itemSample2.checkStatus = true
         itemSample2.rowNumber = 1

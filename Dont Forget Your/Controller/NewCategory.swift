@@ -34,7 +34,7 @@ class NewCategory: UIViewController {
         }
         else {
             textNewCategory.text = ""
-            numberOfItems = "0 item"
+            numberOfItems = "0"
         }
         
         textNewCategory.delegate = self
