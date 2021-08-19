@@ -31,6 +31,7 @@ class NewCategory: UIViewController {
         if let category = categories {
             textNewCategory.text = category.title
             numberOfItems = category.numberOfItem
+            shadowView.backgroundColor = UIColor(named: selectedColor)
         }
         else {
             textNewCategory.text = ""

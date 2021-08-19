@@ -223,7 +223,10 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
                 if let destination = segue.destination as? NewCategory{
                     let category = categories[selectedCellIndex!.row]
                     destination.categories = category
-                    destination.listToCheck = categories
+                    var categoriesWithRemovedItemForCheck = categories  //We eliminate the index in order to able to keep the category's name when editing
+                    categoriesWithRemovedItemForCheck.remove(at: selectedCellIndex!.row)
+                    destination.listToCheck = categoriesWithRemovedItemForCheck
+                    destination.selectedColor = category.categoryColor!
                     destination.doubleCount = true
                 }
                 
