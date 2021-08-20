@@ -50,6 +50,7 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
             loadSampleData()
             saveCategory()
         }
+        
     }
 
 
@@ -131,7 +132,7 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
             
             let color = UIColor(named: categories[indexPath.row].categoryColor!)
             cell.viewItems.backgroundColor = color
-            
+
             var itemCount: Int{
                 let request = NSFetchRequest<Item>(entityName: "Item")
                 let predicate = NSPredicate(format: "parentCategory.title MATCHES %@", categories[indexPath.row].title!)
@@ -279,6 +280,7 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
                     modifiedCategory.title = sourceViewController.textNewCategory.text
                     modifiedCategory.numberOfItem = sourceViewController.numberOfItems
                     modifiedCategory.categoryColor = sourceViewController.selectedColor
+                    modifiedCategory.rowNumber = Int16(categories.count)
                     categories.append(modifiedCategory)
                     saveCategory()
                 }
@@ -353,6 +355,10 @@ extension CategoryListTableVC{
 
             self.categories.remove(at: indexPath.row)
             
+            for i in 0..<self.categories.count{
+                self.categories[i].rowNumber = Int16(i)
+            }
+            
             self.saveCategory()
         }))
         self.present(deleteAlerte, animated: true, completion: nil)
@@ -371,7 +377,6 @@ extension CategoryListTableVC{
         action.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         action.pruneNegativeWidthConstraints() //remove constraint error from alert menu view
         self.present(action, animated: true, completion: nil)
-        
     }
     
     @objc func endReorderingRows(){

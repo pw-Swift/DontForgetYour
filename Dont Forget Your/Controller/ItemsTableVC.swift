@@ -108,7 +108,6 @@ class ItemsTableVC: UITableViewController /*,UINavigationControllerDelegate*/ {
             cell.itemName.text = items[indexPath.row].itemName
             cell.itemDescription.text = items[indexPath.row].itemDescription
             
-            
             if items[indexPath.row].checkStatus == false{
                 cell.accessoryType = .none
                 cell.itemName.textColor = UIColor.label
@@ -241,6 +240,11 @@ extension ItemsTableVC {
             self.items.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             self.numberOfItems = self.items.count
+            
+            for i in 0..<self.items.count{
+                self.items[i].rowNumber = Int16(i)
+            }
+            
             self.saveItems(reloadData: true)
             handler(true)
         }
