@@ -203,9 +203,6 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
         categories.remove(at: sourceIndexPath.row)
         categories.insert(rowToMove, at: destinationIndexPath.row)
         
-        for i in 0..<categories.count {
-            categories[Int(i)].rowNumber = Int16(i)
-        }
     }
     
     override func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
@@ -354,11 +351,7 @@ extension CategoryListTableVC{
             self.context.delete(self.categories[indexPath.row])
 
             self.categories.remove(at: indexPath.row)
-            
-            for i in 0..<self.categories.count{
-                self.categories[i].rowNumber = Int16(i)
-            }
-            
+
             self.saveCategory()
         }))
         self.present(deleteAlerte, animated: true, completion: nil)
@@ -401,6 +394,10 @@ extension UIAlertController {
 // MARK: - Persistent Datas - Core Data
 extension CategoryListTableVC{
     func saveCategory(){
+        for i in 0..<categories.count{
+            categories[i].rowNumber = Int16(i)
+        }
+        
         do{
             try context.save()
         } catch {

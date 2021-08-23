@@ -147,10 +147,6 @@ class ItemsTableVC: UITableViewController /*,UINavigationControllerDelegate*/ {
         let rowToMove = items[sourceIndexPath.row]
         items.remove(at: sourceIndexPath.row)
         items.insert(rowToMove, at: destinationIndexPath.row)
-        
-        for i in 0..<items.count{
-            items[Int(i)].rowNumber = Int16(i)
-        }
     }
     
     override func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
@@ -240,10 +236,6 @@ extension ItemsTableVC {
             self.items.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             self.numberOfItems = self.items.count
-            
-            for i in 0..<self.items.count{
-                self.items[i].rowNumber = Int16(i)
-            }
             
             self.saveItems(reloadData: true)
             handler(true)
@@ -338,6 +330,11 @@ extension ItemsTableVC{
 // MARK: - Persistent Data - Core Data
 extension ItemsTableVC{
     func saveItems(reloadData tableViewReloadData: Bool){
+        
+        for i in 0..<items.count{
+            items[i].rowNumber = Int16(i)
+        }
+       
         if tableViewReloadData == true{
             do{
                 try context.save()
