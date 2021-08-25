@@ -121,6 +121,7 @@ class ItemsTableVC: UITableViewController /*,UINavigationControllerDelegate*/ {
             }
             K.Colors.clearGrayColorWhenTapped(for: cell)
             return cell
+
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: K.segueIdentifier.itemCellButton, for: indexPath) as! ItemsTableViewCell
 
@@ -128,6 +129,7 @@ class ItemsTableVC: UITableViewController /*,UINavigationControllerDelegate*/ {
             return cell
         }
     }
+    
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if indexPath.section == 0{
@@ -155,7 +157,14 @@ class ItemsTableVC: UITableViewController /*,UINavigationControllerDelegate*/ {
         } else {return proposedDestinationIndexPath}
     }
     
-
+    
+    // MARK: - Animation
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.alpha = 0
+        UIView.animate(withDuration: 0.5, delay: 0.05 * Double(indexPath.row)) {
+            cell.alpha = 1
+        }
+    }
     
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

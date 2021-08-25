@@ -210,6 +210,15 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
             return sourceIndexPath
         } else { return proposedDestinationIndexPath }
     }
+    
+    // MARK: - Animation
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.transform = CGAffineTransform(translationX: cell.contentView.frame.width, y: 0)
+                UIView.animate(withDuration: 1, delay: 0.05 * Double(indexPath.row), usingSpringWithDamping: 0.4, initialSpringVelocity: 0.1,
+                               options: .curveEaseIn, animations: {
+                                cell.transform = CGAffineTransform(translationX: cell.contentView.frame.width, y: cell.contentView.frame.height)
+                })
+    }
 
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
