@@ -115,8 +115,8 @@ class ItemsTableVC: UITableViewController /*,UINavigationControllerDelegate*/ {
                 cell.itemImage.image = imageName //UIImage(named: K.Image.hanger)
             } else {
                 cell.accessoryType = .checkmark
-                cell.itemName.textColor = UIColor.systemGray4
-                cell.itemDescription.textColor = UIColor.systemGray4
+                cell.itemName.textColor = UIColor.systemGray2
+                cell.itemDescription.textColor = UIColor.systemGray3
                 cell.itemImage.image = UIImage(named: K.Image.hangerGray)
             }
             K.Colors.clearGrayColorWhenTapped(for: cell)
@@ -158,13 +158,6 @@ class ItemsTableVC: UITableViewController /*,UINavigationControllerDelegate*/ {
     }
     
     
-    // MARK: - Animation
-    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        cell.alpha = 0
-        UIView.animate(withDuration: 0.5, delay: 0.05 * Double(indexPath.row)) {
-            cell.alpha = 1
-        }
-    }
     
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -278,8 +271,8 @@ extension ItemsTableVC {
                     
                     self.items[indexPath.row].checkStatus = true
                     cell?.accessoryType = .checkmark
-                    cell?.itemName.textColor = UIColor.systemGray4
-                    cell?.itemDescription.textColor = UIColor.systemGray4
+                    cell?.itemName.textColor = UIColor.systemGray2
+                    cell?.itemDescription.textColor = UIColor.systemGray3
                     cell?.itemImage.image = UIImage(named: "HangerGray")
                     action.backgroundColor = UIColor.systemRed
                     self.saveItems(reloadData: false)

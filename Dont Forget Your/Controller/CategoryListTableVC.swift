@@ -213,11 +213,13 @@ class CategoryListTableVC: UITableViewController, UINavigationControllerDelegate
     
     // MARK: - Animation
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        cell.transform = CGAffineTransform(translationX: cell.contentView.frame.width, y: 0)
-                UIView.animate(withDuration: 1, delay: 0.05 * Double(indexPath.row), usingSpringWithDamping: 0.4, initialSpringVelocity: 0.1,
-                               options: .curveEaseIn, animations: {
-                                cell.transform = CGAffineTransform(translationX: cell.contentView.frame.width, y: cell.contentView.frame.height)
-                })
+        if indexPath.section == 0{
+            cell.alpha = 0.0
+            UIView.animate(withDuration: 0.5, delay: 0.05 * Double(indexPath.row)) {
+                cell.alpha = 1
+            }
+        }
+
     }
 
     // MARK: - Navigation
